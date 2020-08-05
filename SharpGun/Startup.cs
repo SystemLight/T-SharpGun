@@ -9,7 +9,10 @@ namespace SharpGun
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services) {
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -18,13 +21,10 @@ namespace SharpGun
             }
 
             app.UseSpaStaticFiles();
-            
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment()) {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
             });
         }
     }
