@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGun", "SharpGun\SharpGun.csproj", "{FBC8BC74-EE03-4DF2-964B-57B989DC4596}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGun", "SharpGun\SharpGun.csproj", "{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FBC8BC74-EE03-4DF2-964B-57B989DC4596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBC8BC74-EE03-4DF2-964B-57B989DC4596}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBC8BC74-EE03-4DF2-964B-57B989DC4596}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBC8BC74-EE03-4DF2-964B-57B989DC4596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
