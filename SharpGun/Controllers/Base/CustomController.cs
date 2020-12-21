@@ -10,7 +10,7 @@ namespace SharpGun.Controllers.Base
         /// 可以通过Route装饰注册自定义路径
         /// </summary>
         /// <returns></returns>
-        [Route("Custom")]
+        [HttpGet("Custom")]
         public string Index() {
             return "Hello CustomController";
         }
@@ -20,7 +20,7 @@ namespace SharpGun.Controllers.Base
         /// 可以使用[Action]占位路由
         /// </summary>
         /// <returns></returns>
-        [Route("[Action]")]
+        [HttpGet("[Action]")]
         public object Object() {
             return new {msg = "Hello Object"};
         }

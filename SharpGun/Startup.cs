@@ -1,13 +1,25 @@
+using System;
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SharpGun.Services;
 
 namespace SharpGun
 {
     public class Startup
     {
+        private readonly IConfiguration _config;
+
+        public Startup(IConfiguration config) {
+            _config = config;
+        }
+
         public void ConfigureServices(IServiceCollection services) {
             #region 配置Kestrel服务器
 
@@ -58,6 +70,15 @@ namespace SharpGun
             // 注册瞬时服务，每次请求都实例新的对象
             services.AddTransient<IElvesRepositoryService, ElvesRepositoryService>();
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "SharpGun", Version = "v1"});
+                options.IncludeXmlComments(Path.Combine(
+                    AppContext.BaseDirectory,
+                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"
+                ), true);
+            });
+
             // 注册目录浏览服务
             // services.AddDirectoryBrowser();
 
@@ -95,6 +116,17 @@ namespace SharpGun
             if (env.IsDevelopment()) {
                 // 使用异常页面显示错误信息，便于开发调试
                 app.UseDeveloperExceptionPage();
+
+                #region 引入Swagger中间件
+
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    //
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SharpGun v1");
+                });
+
+                #endregion
             }
             else {
                 // 注册开发环境异常处理错误路由重定向
@@ -181,6 +213,37 @@ namespace SharpGun
             // 启用静态文件访问，静态文件目录默认规定为wwwroot目录下
             app.UseStaticFiles();
 
+            #region 静态文件个性化配置
+
+            /*
+                var provider = new FileExtensionContentTypeProvider();
+                provider.Mappings[".myapp"] = "application/x-msdownload";
+                provider.Mappings[".htm3"] = "text/html";
+                provider.Mappings[".image"] = "image/png";
+                provider.Mappings[".rtf"] = "application/x-msdownload";
+                provider.Mappings.Remove(".mp4");
+
+                app.UseStaticFiles(
+                    new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "MyStaticFiles")),
+                        RequestPath = "/StaticFiles",
+                        ServeUnknownFileTypes = true,
+                        DefaultContentType = "image/png",
+                        ContentTypeProvider = provider,
+                        OnPrepareResponse = ctx =>
+                        {
+                            ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800}");
+                        }
+                    }
+                );
+            */
+
+            #endregion
+
+            // UseStaticFiles和UseDefaultFiles合并的中间件
+            // app.UseFileServer(enableDirectoryBrowsing: true);
+
             // 【弃用】使用MVC中间件，使用endpoint中MapControllerRoute()方法代替
             // app.UseMvc();
 
@@ -215,7 +278,7 @@ namespace SharpGun
                 // 只映射添加[Route("")]装饰的Controller类
                 // endpoints.MapControllers();
 
-                // 只映射RazorPages视图
+                // 映射Pages目录下RazorPages视图文件
                 // endpoints.MapRazorPages();
 
                 #region 映射MVC控制器路由，该方法代替了UseMvc()中间件
@@ -242,6 +305,12 @@ namespace SharpGun
                 */
 
                 #endregion
+            });
+
+            app.Run(async context =>
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync("Nonexistent path");
             });
         }
     }

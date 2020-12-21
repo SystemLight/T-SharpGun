@@ -13,6 +13,7 @@ namespace SharpGun.Controllers.Base
         /// 3. 必须配置Route装饰器指定路由
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public string Index() {
             return "Hello ApiController";
         }

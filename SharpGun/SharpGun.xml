@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpGun</name>
+    </assembly>
+    <members>
+        <member name="M:SharpGun.Controllers.Base.ApiController.Index">
+            <summary>
+            GET /Api/Index
+            1. ApiController修饰后参数绑定策略会自动推断
+            2. 模型状态自动验证，否则需要手动调用ModelState.IsValid
+            3. 必须配置Route装饰器指定路由
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.CustomController.Index">
+            <summary>
+            GET /Home/Custom
+            可以通过Route装饰注册自定义路径
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.CustomController.Object">
+            <summary>
+            GET /Home/Object
+            可以使用[Action]占位路由
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.HomeController.Index">
+            <summary>
+            GET /Home/Index
+            传统基本路由，无视图映射
+            </summary>
+            <returns>string</returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.HomeController.Object">
+            <summary>
+            GET /Home/Object
+            返回对象会自动序列化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.HomeController.Content">
+            <summary>
+            GET /Home/Content
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Base.HomeController.Elves">
+            <summary>
+            GET /Home/Elves
+            使用通过构造函数依赖注入的服务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Full.HomeFullController.Index">
+            <summary>
+            GET /HomeFull/Index
+            提供视图处理功能，规定Views文件夹下需要包含HomeFull同名的文件夹，
+            文件名称需要与Action保持一致
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Full.HomeFullController.Content(SharpGun.Services.IElvesRepositoryService)">
+            <summary>
+            GET /HomeFull/Content
+            </summary>
+            <param name="elvesRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Full.HomeFullController.ViewModels(SharpGun.Services.IElvesRepositoryService)">
+            <summary>
+            GET /HomeFull/ViewModels
+            </summary>
+            <param name="elvesRepository"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Full.HomeFullController.Valid">
+            <summary>
+            GET /HomeFull/Valid
+            重定向到另一个Action中
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGun.Controllers.Pure.HomePureController.Index">
+            <summary>
+            GET /HomePure/Index
+            没有提供任何辅助方法，纯类的控制器
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

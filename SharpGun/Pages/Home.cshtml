@@ -1,0 +1,14 @@
+﻿@page "/Page/Home/Index"
+@model Sharp.Pages.Home
+
+@{
+    ViewData["title"] = "Hello HomeFull";
+    Layout = "Layouts/_Frame";
+}
+
+<h1>Hello Page</h1>
+<div>
+    @{
+        await Html.RenderPartialAsync("Shared/Parts/Show");
+    }
+</div>
