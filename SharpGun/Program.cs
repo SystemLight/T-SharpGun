@@ -6,14 +6,23 @@ namespace SharpGun
     public static class Program
     {
         private static IHostBuilder CreateHostBuilder(string[] args) {
+            /*
+                执行内容：
+                    1. 加载主机和应用程序配置信息
+                    2. 配置日志记录
+                    3. 设置web服务器
+                    4. 设置dotnet core的托管形式
+
+                可配置方法：
+                    1. ConfigureWebHostDefaults
+                    2. ConfigureHostConfiguration
+                    3. ConfigureAppConfiguration
+                    4. ConfigureServices
+
+                第三方拓展：
+                    1. UseServiceProviderFactory
+            */
             return Host
-                /*
-                    执行内容：
-                        1. 加载主机和应用程序配置信息
-                        2. 配置日志记录
-                        3. 设置web服务器
-                        4. 设置dotnet core的托管形式
-                 */
                 .CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

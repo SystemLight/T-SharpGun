@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using SharpGun.Services;
 
 namespace SharpGun
 {
@@ -21,6 +19,28 @@ namespace SharpGun
         }
 
         public void ConfigureServices(IServiceCollection services) {
+            // 尝试注册单例服务，如果已经注册将不注册，永不销毁
+            // services.TryAddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
+            // 尝试注册服务，如果实现类相同将不注册
+            // services.TryAddEnumerable(ServiceDescriptor.Singleton<IElvesRepositoryService, ElvesRepositoryService>());
+
+            // 注册单例服务，永不销毁
+            // services.AddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
+            // services.AddSingleton<IElvesRepositoryService>(new ElvesRepositoryService());
+            // services.AddSingleton<IElvesRepositoryService>(provider => new ElvesRepositoryService());
+            // services.AddSingleton(typeof(IElvesRepositoryService<>), typeof(ElvesRepositoryService<>));
+
+            // 注册作用域服务，作用域内实例不销毁
+            // services.AddScoped<IElvesRepositoryService, ElvesRepositoryService>();
+
+            // 注册瞬时服务，每次请求都实例新的对象
+            // services.AddTransient<IElvesRepositoryService, ElvesRepositoryService>();
+
+            // 移除所有注册的指定服务
+            // services.RemoveAll<IElvesRepositoryService>();
+            // 替换注册的指定服务
+            // services.Replace(ServiceDescriptor.Singleton<IElvesRepositoryService, ElvesRepositoryService>());
+
             #region 配置Kestrel服务器
 
             /*
@@ -55,29 +75,39 @@ namespace SharpGun
 
             #endregion
 
-            // 尝试注册单例服务，如果已经注册将不注册，永不销毁
-            // services.TryAddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
+            #region 服务选项验证
 
-            // 注册单例服务，永不销毁
-            // services.AddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
-            // services.AddSingleton<IElvesRepositoryService>(new ElvesRepositoryService());
-            // services.AddSingleton<IElvesRepositoryService>(provider => new ElvesRepositoryService());
-            // services.AddSingleton(typeof(IElvesRepositoryService), typeof(ElvesRepositoryService));
+            /*
+                services.AddOptions<ElvesRepositoryServiceOptions>().Configure(options =>
+                {
+                    options.MaxAge = 120;
+                }).Validate(options =>
+                {
+                    Console.WriteLine(options.MaxAge);
+                    return options.MaxAge < 100;
+                }, "MaxAge不能大于100");
+            */
 
-            // 注册作用域服务，作用域内实例不销毁
-            // services.AddScoped<IElvesRepositoryService, ElvesRepositoryService>();
+            // services.AddOptions<object>().Configure(options => { }).ValidateDataAnnotations();
+            // services.AddOptions<object>().Configure(options => { }).Services.AddSingleton<IValidateOptions<ElvesRepositoryServiceValidateOptions>>();
 
-            // 注册瞬时服务，每次请求都实例新的对象
-            services.AddTransient<IElvesRepositoryService, ElvesRepositoryService>();
+            #endregion
+
+            #region 注册Swagger生成文档服务
 
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo {Title = "SharpGun", Version = "v1"});
-                options.IncludeXmlComments(Path.Combine(
-                    AppContext.BaseDirectory,
-                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"
-                ), true);
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SharpGun.xml"), true);
             });
+
+            #endregion
+
+            // 注册日志所需服务
+            services.AddLogging();
+
+            // 自定义服务添加拓展
+            services.AddElvesRepository(120);
 
             // 注册目录浏览服务
             // services.AddDirectoryBrowser();
@@ -109,7 +139,6 @@ namespace SharpGun
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             // 在Application级别获取依赖注入的服务，返回服务实例
             // app.ApplicationServices.GetService<IElvesRepositoryService>();
-
             // 关闭应用程序，关闭后程序进程退出
             // app.ApplicationServices.GetService<IHostApplicationLifetime>()?.StopApplication();
 
@@ -122,7 +151,7 @@ namespace SharpGun
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
                 {
-                    //
+                    // 访问地址：GET /swagger/index.html
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "SharpGun v1");
                 });
 
@@ -208,10 +237,10 @@ namespace SharpGun
             app.UseRouting();
 
             // 使用静态文件默认页配置，默认访问index.html，在UseStaticFiles()中间件之前启用
-            app.UseDefaultFiles();
+            // app.UseDefaultFiles();
 
             // 启用静态文件访问，静态文件目录默认规定为wwwroot目录下
-            app.UseStaticFiles();
+            // app.UseStaticFiles();
 
             #region 静态文件个性化配置
 
@@ -242,7 +271,7 @@ namespace SharpGun
             #endregion
 
             // UseStaticFiles和UseDefaultFiles合并的中间件
-            // app.UseFileServer(enableDirectoryBrowsing: true);
+            app.UseFileServer(enableDirectoryBrowsing: false);
 
             // 【弃用】使用MVC中间件，使用endpoint中MapControllerRoute()方法代替
             // app.UseMvc();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SharpGun.Models;
 using SharpGun.Services;
 using SharpGun.ViewModels;
