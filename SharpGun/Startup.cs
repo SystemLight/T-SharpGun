@@ -106,9 +106,6 @@ namespace SharpGun
             // 注册日志所需服务
             services.AddLogging();
 
-            // 自定义服务添加拓展
-            services.AddElvesRepository(120);
-
             // 注册目录浏览服务
             // services.AddDirectoryBrowser();
 
@@ -134,6 +131,9 @@ namespace SharpGun
             */
 
             #endregion
+
+            // 自定义服务添加拓展
+            services.AddElvesRepository(120);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {

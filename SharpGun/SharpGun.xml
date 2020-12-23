@@ -90,5 +90,10 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SharpGun.Services.ElvesRepositoryService.Dispose">
+            <summary>
+            如果需要容器释放服务，请实现IDisposable接口执行释放逻辑
+            </summary>
+        </member>
     </members>
 </doc>
