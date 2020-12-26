@@ -14,13 +14,6 @@ CSharp页面模板，包含各种中间件配置注释，需要按需使用
 
 ## 目录结构
 
-导入模板存放目录：
-
-- windows
-```
-cd "C:\Users\%USERNAME%\Documents\Visual Studio 2019\Templates\ProjectTemplates\Visual Web Developer" && start .
-```
-
 |  文件名   | 作用  |
 |  :----  | :----  |
 | Program.cs  | 核心程序入口文件 |

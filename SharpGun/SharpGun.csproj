@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DocumentationFile>D:\Development\CSharp\T-SharpGun\SharpGun\SharpGun.xml</DocumentationFile>
+      <DocumentationFile>bin\Debug\SharpGun.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
