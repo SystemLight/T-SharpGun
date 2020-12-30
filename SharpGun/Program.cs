@@ -19,6 +19,9 @@ namespace SharpGun
                     3. ConfigureAppConfiguration
                     4. ConfigureServices
 
+                额外配置：
+                    1. ConfigureLogging
+
                 第三方拓展：
                     1. UseServiceProviderFactory
             */

@@ -1,12 +1,9 @@
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace SharpGun
 {
@@ -21,6 +18,7 @@ namespace SharpGun
         public void ConfigureServices(IServiceCollection services) {
             // 尝试注册单例服务，如果已经注册将不注册，永不销毁
             // services.TryAddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
+
             // 尝试注册服务，如果实现类相同将不注册
             // services.TryAddEnumerable(ServiceDescriptor.Singleton<IElvesRepositoryService, ElvesRepositoryService>());
 
@@ -93,24 +91,26 @@ namespace SharpGun
 
             #endregion
 
-            #region 注册Swagger生成文档服务
+            #region 注册Swagger生成文档服务，需要开启XML文档注释生成并将路径指向生成位置
 
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "SharpGun", Version = "v1"});
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SharpGun.xml"), true);
-            });
+            /*
+                services.AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo {Title = "SharpGun", Version = "v1"});
+                    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "SharpGun.xml"), true);
+                });
+            */
 
             #endregion
 
             // 注册日志所需服务
-            services.AddLogging();
+            // services.AddLogging();
 
             // 注册目录浏览服务
             // services.AddDirectoryBrowser();
 
             // 将Controller所需的service添加注册到IOC容器，搭配endpoint.MapControllers()方法
-            // services.AddControllers();
+            services.AddControllers();
 
             // 将Controller所需的service添加注册到IOC容器，并包含Views视图的服务
             // services.AddControllersWithViews();
@@ -119,7 +119,22 @@ namespace SharpGun
             // services.AddRazorPages();
 
             // 将MVC所需的service添加注册到IOC容器，搭配endpoint.MapControllerRoute()方法
-            services.AddMvc();
+            // services.AddMvc();
+
+            #region MVC生命周期服务高级配置功能
+
+            /*
+                services.AddMvc(options =>
+                {
+                    options.Filters.Add<MyExceptionFilter>();
+                }).AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                    options.JsonSerializerOptions.Converters.Add(new DateTimeConvert());
+                });
+            */
+
+            #endregion
 
             #region 禁用Endpoint路由以支持UseMvc()中间件
 
@@ -132,13 +147,14 @@ namespace SharpGun
 
             #endregion
 
-            // 自定义服务添加拓展
-            services.AddElvesRepository(120);
+            // 自定义服务添加拓展举例
+            // services.AddElvesRepository(120);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             // 在Application级别获取依赖注入的服务，返回服务实例
             // app.ApplicationServices.GetService<IElvesRepositoryService>();
+
             // 关闭应用程序，关闭后程序进程退出
             // app.ApplicationServices.GetService<IHostApplicationLifetime>()?.StopApplication();
 
@@ -148,17 +164,19 @@ namespace SharpGun
 
                 #region 引入Swagger中间件
 
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    // 访问地址：GET /swagger/index.html
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SharpGun v1");
-                });
+                /*
+                    app.UseSwagger();
+                    app.UseSwaggerUI(options =>
+                    {
+                        // 访问地址：GET /swagger/index.html
+                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "SharpGun v1");
+                    });
+                */
 
                 #endregion
             }
             else {
-                // 注册开发环境异常处理错误路由重定向
+                // 注册开发环境异常处理错误路由重定向，支持lambda函数参数
                 app.UseExceptionHandler("/error");
 
                 // 将 HTTP 严格传输安全协议 (HSTS) 标头发送到客户端
@@ -227,6 +245,9 @@ namespace SharpGun
             // 注册http访问重定向到https访问
             // app.UseHttpsRedirection();
 
+            // 重定向中间件
+            // app.UseRewriter();
+
             // 启用验证功能
             // app.UseAuthentication();
 
@@ -271,7 +292,7 @@ namespace SharpGun
             #endregion
 
             // UseStaticFiles和UseDefaultFiles合并的中间件
-            app.UseFileServer(enableDirectoryBrowsing: false);
+            // app.UseFileServer(enableDirectoryBrowsing: false);
 
             // 【弃用】使用MVC中间件，使用endpoint中MapControllerRoute()方法代替
             // app.UseMvc();
@@ -305,7 +326,7 @@ namespace SharpGun
                 #endregion
 
                 // 只映射添加[Route("")]装饰的Controller类
-                // endpoints.MapControllers();
+                endpoints.MapControllers();
 
                 // 映射Pages目录下RazorPages视图文件
                 // endpoints.MapRazorPages();
@@ -322,7 +343,7 @@ namespace SharpGun
                 #endregion
 
                 // 【语法糖】等效于上述的default配置
-                endpoints.MapDefaultControllerRoute();
+                // endpoints.MapDefaultControllerRoute();
 
                 #region 映射MVC区域路由，控制器中通过[Area("名称")]装饰区分区域
 

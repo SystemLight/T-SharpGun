@@ -6,17 +6,19 @@ CSharp页面模板，包含各种中间件配置注释，需要按需使用
 
 #### 核心环境
 
-- [ ] dotnet core 5
+- [x] dotnet core 5
 
 #### 依赖包
 
 - [ ] Microsoft.AspNetCore.SpaServices.Extensions
+- [x] Swashbuckle.AspNetCore
 
 ## 目录结构
 
 |  文件名   | 作用  |
 |  :----  | :----  |
 | Program.cs  | 核心程序入口文件 |
+| SharpGun.xml  | 配置文档生成后产生的说明文件 |
 | Startup.cs  | 中间件注入，app启动配置文件 |
 
 ## 注释规范
