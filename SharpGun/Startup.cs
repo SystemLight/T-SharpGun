@@ -103,6 +103,19 @@ namespace SharpGun
 
             #endregion
 
+            #region VaryByQueryKeys高级缓存配置
+
+            /*
+                services.AddResponseCaching(options =>
+                {
+                    options.SizeLimit = 200;
+                    options.MaximumBodySize = 200;
+                    options.UseCaseSensitivePaths = true;
+                });
+            */
+
+            #endregion
+
             // 注册日志所需服务
             // services.AddLogging();
 
@@ -127,6 +140,12 @@ namespace SharpGun
                 services.AddMvc(options =>
                 {
                     options.Filters.Add<MyExceptionFilter>();
+                    options.CacheProfiles.Add("default", new CacheProfile
+                    {
+                        Duration = 200,
+                        Location = ResponseCacheLocation.Client,
+                        NoStore = true
+                    });
                 }).AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
@@ -241,6 +260,9 @@ namespace SharpGun
             */
 
             #endregion
+
+            // VaryByQueryKeys高级缓存配置
+            // app.UseResponseCaching();
 
             // 注册http访问重定向到https访问
             // app.UseHttpsRedirection();
