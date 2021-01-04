@@ -29,6 +29,9 @@ namespace SharpGun
                 .CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    // 指定监听地址和端口号
+                    // webBuilder.UseUrls("http://0.0.0.0:8001");
+
                     // 将所有配置项通过该泛型类Startup映射
                     webBuilder.UseStartup<Startup>();
                 });
