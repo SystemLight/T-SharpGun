@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Sharp.Pages
+namespace SharpGun.Pages
 {
     public class Home : PageModel
     {
-        public void OnGet() {
+        public string Message = "Hello ";
+
+        public void OnGet([FromQuery] string name) {
+            if (string.IsNullOrEmpty(name)) {
+                Message += "world";
+            }
+            else {
+                Message += name;
+            }
         }
     }
 }

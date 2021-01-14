@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using SharpGun.Middlewares;
+using SharpGun.Extensions;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Builder
     }
 }
 
-namespace SharpGun.Middlewares
+namespace SharpGun.Extensions
 {
     public class ProxyMiddleware
     {

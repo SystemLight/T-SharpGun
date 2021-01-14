@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SharpGun.Controllers.Pure
 {
+    [Produces(MediaTypeNames.Text.Plain)]
     [Controller]
     public class HomePureController
     {

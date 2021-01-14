@@ -1,12 +1,12 @@
-﻿@page "/Page/Home/Index"
-@model Sharp.Pages.Home
+﻿@page "/Pages/Home"
+@model SharpGun.Pages.Home
 
 @{
     ViewData["title"] = "Hello HomeFull";
     Layout = "Layouts/_Frame";
 }
 
-<h1>Hello Page</h1>
+<h1>@Model.Message</h1>
 <div>
     @{
         await Html.RenderPartialAsync("Shared/Parts/Show");

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -91,7 +92,7 @@ namespace SharpGun
 
             #endregion
 
-            #region 注册Swagger生成文档服务，需要开启XML文档注释生成并将路径指向生成位置
+            #region 注册Swagger生成文档服务，!!-需要开启XML文档注释生成并将路径指向生成位置-!!
 
             /*
                 services.AddSwaggerGen(options =>
@@ -129,10 +130,13 @@ namespace SharpGun
             // services.AddControllersWithViews();
 
             // 添加Razor引擎服务处理视图，代替AddMvc方法
-            // services.AddRazorPages();
+            services.AddRazorPages();
 
             // 将MVC所需的service添加注册到IOC容器，搭配endpoint.MapControllerRoute()方法
-            // services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.UseCentralRoutePrefix(new RouteAttribute("api/v{version}"));
+            });
 
             #region MVC生命周期服务高级配置功能
 
@@ -351,7 +355,7 @@ namespace SharpGun
                 endpoints.MapControllers();
 
                 // 映射Pages目录下RazorPages视图文件
-                // endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
 
                 #region 映射MVC控制器路由，该方法代替了UseMvc()中间件
 
