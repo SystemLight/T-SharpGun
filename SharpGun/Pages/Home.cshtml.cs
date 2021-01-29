@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SharpGun.Services;
 
 namespace SharpGun.Pages
 {
@@ -9,19 +10,32 @@ namespace SharpGun.Pages
         // [BindProperty(SupportsGet = true)] public int Id { get; set; }
         public string Message = "Hello ";
 
-        // public void OnGet([FromQuery] string name) {
-        //     if (string.IsNullOrEmpty(name)) {
-        //         Message += "world";
-        //     }
-        //     else {
-        //         Message += name;
-        //     }
-        // }
+        /*
+            public IActionResult OnGet() {
+                return Redirect("/404");
+            }
+        */
 
-        public IActionResult OnGeet() {
-            var partialView = new PartialViewResult();
-            partialView.ViewName = "Shared/Parts/_Show";
-            return partialView;
+        /*
+            public IActionResult OnGet() {
+                return Page();
+            }
+        */
+
+        /*
+            public IActionResult OnGet() {
+                return Partial("Shared/Parts/_Show");
+            }
+        */
+
+        public void OnGet([FromQuery] string name, [FromServices] IReadJsonService service) {
+            var config = service.GetConfig();
+            if (string.IsNullOrEmpty(name)) {
+                Message += config["name"];
+            }
+            else {
+                Message += name;
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SharpGun.Services
     {
         private List<Elves> _elves;
         private readonly IOptions<ElvesRepositoryServiceOptions> _options;
-        private ILogger<ElvesRepositoryService> _logger;
+        private readonly ILogger<ElvesRepositoryService> _logger;
 
         public ElvesRepositoryService(
             IOptions<ElvesRepositoryServiceOptions> options,

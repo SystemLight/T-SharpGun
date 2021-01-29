@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace SharpGun
 {
     public static class Program
     {
-        // https://www.cnblogs.com/tiger-wang/p/14167625.html
         private static IHostBuilder CreateHostBuilder(string[] args) {
             /*
                 执行内容：
