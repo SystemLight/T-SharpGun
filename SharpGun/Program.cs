@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace SharpGun
 {
     public static class Program
     {
+        // https://www.cnblogs.com/tiger-wang/p/14167625.html
         private static IHostBuilder CreateHostBuilder(string[] args) {
             /*
                 执行内容：
@@ -27,6 +29,13 @@ namespace SharpGun
             */
             return Host
                 .CreateDefaultBuilder(args)
+                /*
+                    .ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        // 应用程序读取的环境变量增加前缀约束
+                        config.AddEnvironmentVariables(prefix: "MyCustomPrefix_");
+                    })
+                */
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     // 指定监听地址和端口号

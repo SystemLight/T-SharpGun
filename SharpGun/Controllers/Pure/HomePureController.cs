@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SharpGun.Controllers.Pure
 {
+    // [Produces("application/json")]
     [Produces(MediaTypeNames.Text.Plain)]
     [Controller]
     public class HomePureController

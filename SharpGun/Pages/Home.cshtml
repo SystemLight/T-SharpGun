@@ -1,14 +1,18 @@
 ﻿@page "/Pages/Home"
 @model SharpGun.Pages.Home
+@* @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers *@
+@* @addTagHelper *, AuthoringTagHelpers *@
+@* TagHelper类的全名，程序集的名称 *@
 
 @{
     ViewData["title"] = "Hello HomeFull";
-    Layout = "Layouts/_Frame";
+    // Layout = "Layouts/_Frame";
 }
 
 <h1>@Model.Message</h1>
 <div>
     @{
-        await Html.RenderPartialAsync("Shared/Parts/Show");
+        await Html.RenderPartialAsync("Shared/Parts/_Show");
     }
 </div>
+

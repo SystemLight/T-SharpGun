@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SharpGun.Services;
 
 namespace SharpGun
 {
@@ -23,7 +23,7 @@ namespace SharpGun
             // services.TryAddEnumerable(ServiceDescriptor.Singleton<IElvesRepositoryService, ElvesRepositoryService>());
 
             // 注册单例服务，永不销毁
-            // services.AddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
+            services.AddSingleton<IElvesRepositoryService, ElvesRepositoryService>();
             // services.AddSingleton<IElvesRepositoryService>(new ElvesRepositoryService());
             // services.AddSingleton<IElvesRepositoryService>(provider => new ElvesRepositoryService());
             // services.AddSingleton(typeof(IElvesRepositoryService<>), typeof(ElvesRepositoryService<>));
@@ -123,13 +123,30 @@ namespace SharpGun
             // services.AddDirectoryBrowser();
 
             // 将Controller所需的service添加注册到IOC容器，搭配endpoint.MapControllers()方法
-            services.AddControllers();
+            // services.AddControllers();
 
             // 将Controller所需的service添加注册到IOC容器，并包含Views视图的服务
             // services.AddControllersWithViews();
 
-            // 添加Razor引擎服务处理视图，代替AddMvc方法
-            // services.AddRazorPages();
+            #region 添加Razor引擎服务处理视图，代替AddMvc方法
+
+            services.AddRazorPages();
+            /*
+                services.AddRazorPages(options =>
+                {
+                    // 添加友好路由，第一个参数时页面实体文件，可以不加拓展，第二个参数是实际映射路由
+                    options.Conventions.AddPageRoute("/DetailA", "/Pages");
+
+                    // 所有请求映射到一个文件
+                    options.Conventions.AddPageRoute("/index", "{*url}");
+                }).AddViewOptions(options =>
+                {
+                    // 禁用客户端验证
+                    options.HtmlHelperOptions.ClientValidationEnabled = false;
+                });
+            */
+
+            #endregion
 
             // 将MVC所需的service添加注册到IOC容器，搭配endpoint.MapControllerRoute()方法
             // services.AddMvc();
@@ -351,7 +368,7 @@ namespace SharpGun
                 endpoints.MapControllers();
 
                 // 映射Pages目录下RazorPages视图文件
-                // endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
 
                 #region 映射MVC控制器路由，该方法代替了UseMvc()中间件
 
@@ -379,11 +396,14 @@ namespace SharpGun
                 #endregion
             });
 
-            app.Run(async context =>
-            {
-                context.Response.StatusCode = 404;
-                await context.Response.WriteAsync("Nonexistent path");
-            });
+            // 注册HTTP状态管理中间件，使用内置Page
+            // app.UseStatusCodePages();
+
+            // 注册HTTP状态管理中间件，使用客户端重定向
+            // app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
+
+            // 注册HTTP状态管理中间件，使用服务端重定向
+            // app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
         }
     }
 }
