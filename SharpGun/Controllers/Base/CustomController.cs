@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SharpGun.Controllers.Base
 {
@@ -23,6 +24,17 @@ namespace SharpGun.Controllers.Base
         [HttpGet("[Action]")]
         public object Object() {
             return new {msg = "Hello Object"};
+        }
+
+        [HttpGet("[Action]")]
+        public IActionResult Razor() {
+            var query = new Dictionary<string, string>();
+            foreach (var queryKey in Request.Query.Keys) {
+                query[queryKey] = Request.Query[queryKey];
+            }
+
+            query["other"] = "SystemLight";
+            return RedirectToPage("/Home", query);
         }
     }
 }

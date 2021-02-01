@@ -26,22 +26,6 @@ namespace SharpGun.Extensions
             _next = next;
         }
 
-        private static HttpRequestMessage CopyRequest(HttpContext context, Uri targetUri) {
-            var req = context.Request;
-            var requestMessage = new HttpRequestMessage
-            {
-                Method = new HttpMethod(req.Method),
-                Content = new StreamContent(req.Body),
-                RequestUri = targetUri,
-            };
-            foreach (var (key, value) in req.Headers) {
-                requestMessage.Content?.Headers.TryAddWithoutValidation(key, value.ToArray());
-            }
-
-            requestMessage.Headers.Host = targetUri.Host;
-            return requestMessage;
-        }
-
         public async Task InvokeAsync(HttpContext context) {
             var url = context.Request.Path.ToUriComponent();
             var uri = new Uri("http://192.168.52.23:5002" + url);
@@ -58,6 +42,22 @@ namespace SharpGun.Extensions
             rsp.ContentLength = remoteRsp.Content.Headers.ContentLength;
 
             await remoteRsp.Content.CopyToAsync(rsp.Body);
+        }
+
+        private static HttpRequestMessage CopyRequest(HttpContext context, Uri targetUri) {
+            var req = context.Request;
+            var requestMessage = new HttpRequestMessage
+            {
+                Method = new HttpMethod(req.Method),
+                Content = new StreamContent(req.Body),
+                RequestUri = targetUri,
+            };
+            foreach (var (key, value) in req.Headers) {
+                requestMessage.Content?.Headers.TryAddWithoutValidation(key, value.ToArray());
+            }
+
+            requestMessage.Headers.Host = targetUri.Host;
+            return requestMessage;
         }
     }
 }

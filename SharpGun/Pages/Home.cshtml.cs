@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SharpGun.Services;
 
 namespace SharpGun.Pages
 {
@@ -28,10 +27,9 @@ namespace SharpGun.Pages
             }
         */
 
-        public void OnGet([FromQuery] string name, [FromServices] IReadJsonService service) {
-            var config = service.GetConfig();
+        public void OnGet([FromQuery] string name) {
             if (string.IsNullOrEmpty(name)) {
-                Message += config["name"];
+                Message += "SystemLight";
             }
             else {
                 Message += name;
