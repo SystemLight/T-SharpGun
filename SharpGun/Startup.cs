@@ -136,11 +136,15 @@ namespace SharpGun
             // 注册目录浏览服务
             // services.AddDirectoryBrowser();
 
+            // 为IHttpContextAccessor服务添加默认实现，控制器中模拟HttpContext.Current接口
+            // services.AddHttpContextAccessor();
+
             // 将Controller所需的service添加注册到IOC容器，搭配endpoint.MapControllers()方法
             services.AddControllers();
 
             // 将Controller所需的service添加注册到IOC容器，并包含Views视图的服务
             // services.AddControllersWithViews();
+            services.AddRazorPages();
 
             #region 添加Razor引擎服务处理视图，代替AddMvc方法
 
@@ -390,7 +394,7 @@ namespace SharpGun
                 endpoints.MapControllers();
 
                 // 映射Pages目录下RazorPages视图文件
-                // endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
 
                 #region 映射MVC控制器路由，该方法代替了UseMvc()中间件
 
