@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using SharpGun.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace SharpGun.Controllers.Base
 {

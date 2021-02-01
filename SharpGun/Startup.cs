@@ -61,6 +61,21 @@ namespace SharpGun
 
             #endregion
 
+            #region 配置重定向规则选项
+
+            /*
+
+                services.Configure<RewriteOptions>(options =>
+                {
+                    // 添加一条正则匹配重写规则并跳过其余规则
+                    // options.AddRewrite("Home/Index", "Api/Index", true);
+                    options.AddRewrite(@"^Gun/(.+)", "Api/$1", true);
+                });
+
+            */
+
+            #endregion
+
             #region 服务配置之后再进行配置注入
 
             /*
@@ -122,7 +137,7 @@ namespace SharpGun
             // services.AddDirectoryBrowser();
 
             // 将Controller所需的service添加注册到IOC容器，搭配endpoint.MapControllers()方法
-            // services.AddControllers();
+            services.AddControllers();
 
             // 将Controller所需的service添加注册到IOC容器，并包含Views视图的服务
             // services.AddControllersWithViews();
@@ -154,6 +169,7 @@ namespace SharpGun
             /*
                 services.AddMvc(options =>
                 {
+                    // Authorization-Resource-Exception-Action-Result
                     options.Filters.Add<MyExceptionFilter>();
                     options.CacheProfiles.Add("default", new CacheProfile
                     {
@@ -277,6 +293,9 @@ namespace SharpGun
 
             #endregion
 
+            // 自定义重定向规则中间件
+            // app.UseRouteRewrite();
+
             // VaryByQueryKeys高级缓存配置
             // app.UseResponseCaching();
 
@@ -286,14 +305,8 @@ namespace SharpGun
             // 重定向中间件
             // app.UseRewriter();
 
-            // 启用验证功能
-            // app.UseAuthentication();
-
             // 启用跨域访问
             // app.UseCors();
-
-            // 启用路由中间件
-            app.UseRouting();
 
             // 使用静态文件默认页配置，默认访问index.html，在UseStaticFiles()中间件之前启用
             // app.UseDefaultFiles();
@@ -332,13 +345,20 @@ namespace SharpGun
             // UseStaticFiles和UseDefaultFiles合并的中间件
             // app.UseFileServer(enableDirectoryBrowsing: false);
 
+            // 路由匹配，找到匹配的终结点路由Endpoint
+            app.UseRouting();
+
+            // 启用验证功能
+            // app.UseAuthentication();
+            // app.UseAuthorization();
+
             // 【弃用】使用MVC中间件，使用endpoint中MapControllerRoute()方法代替
             // app.UseMvc();
 
             // 【弃用】使用MVC默认配置中间件，使用endpoint中MapDefaultControllerRoute()方法代替
             // app.UseMvcWithDefaultRoute();
 
-            // 使用路由端点中间件配置路由处理
+            // 针对UseRouting 中间件匹配到的路由进行 委托方法的执行
             app.UseEndpoints(endpoints =>
             {
                 #region 注册访问指定路由时处理的委托函数
@@ -363,8 +383,11 @@ namespace SharpGun
 
                 #endregion
 
+                // Configure the Health Check endpoint and require an authorized user.
+                // endpoints.MapHealthChecks("/healthz").RequireAuthorization();
+
                 // 只映射添加[Route("")]装饰的Controller类
-                // endpoints.MapControllers();
+                endpoints.MapControllers();
 
                 // 映射Pages目录下RazorPages视图文件
                 // endpoints.MapRazorPages();
