@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGun", "SharpGun\SharpGun.csproj", "{1B5EB9D8-7270-4E39-B45C-E7453FBC9AA5}"
 EndProject
 Global
