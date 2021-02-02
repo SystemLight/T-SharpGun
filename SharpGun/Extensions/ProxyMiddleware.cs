@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using SharpGun.Extensions;
+using Microsoft.AspNetCore.Builder;
 
-namespace Microsoft.AspNetCore.Builder
+namespace SharpGun.Extensions
 {
     public static class ProxyMiddlewareExtensions
     {
@@ -13,10 +13,7 @@ namespace Microsoft.AspNetCore.Builder
             return app.UseMiddleware<ProxyMiddleware>();
         }
     }
-}
 
-namespace SharpGun.Extensions
-{
     public class ProxyMiddleware
     {
         private readonly RequestDelegate _next;
@@ -24,6 +21,22 @@ namespace SharpGun.Extensions
 
         public ProxyMiddleware(RequestDelegate next) {
             _next = next;
+        }
+
+        private static HttpRequestMessage CopyRequest(HttpContext context, Uri targetUri) {
+            var req = context.Request;
+            var requestMessage = new HttpRequestMessage
+            {
+                Method = new HttpMethod(req.Method),
+                Content = new StreamContent(req.Body),
+                RequestUri = targetUri,
+            };
+            foreach (var (key, value) in req.Headers) {
+                requestMessage.Content?.Headers.TryAddWithoutValidation(key, value.ToArray());
+            }
+
+            requestMessage.Headers.Host = targetUri.Host;
+            return requestMessage;
         }
 
         public async Task InvokeAsync(HttpContext context) {
@@ -42,22 +55,6 @@ namespace SharpGun.Extensions
             rsp.ContentLength = remoteRsp.Content.Headers.ContentLength;
 
             await remoteRsp.Content.CopyToAsync(rsp.Body);
-        }
-
-        private static HttpRequestMessage CopyRequest(HttpContext context, Uri targetUri) {
-            var req = context.Request;
-            var requestMessage = new HttpRequestMessage
-            {
-                Method = new HttpMethod(req.Method),
-                Content = new StreamContent(req.Body),
-                RequestUri = targetUri,
-            };
-            foreach (var (key, value) in req.Headers) {
-                requestMessage.Content?.Headers.TryAddWithoutValidation(key, value.ToArray());
-            }
-
-            requestMessage.Headers.Host = targetUri.Host;
-            return requestMessage;
         }
     }
 }

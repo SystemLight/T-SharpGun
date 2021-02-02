@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Suit2.Extensions;
+using Microsoft.AspNetCore.Builder;
 
-namespace Microsoft.AspNetCore.Builder
+namespace SharpGun.Extensions
 {
     public static class RouteRewriteMiddlewareExtensions
     {
@@ -11,10 +10,7 @@ namespace Microsoft.AspNetCore.Builder
             return app.UseMiddleware<RouteRewriteMiddleware>();
         }
     }
-}
 
-namespace Suit2.Extensions
-{
     public class RouteRewriteMiddleware
     {
         private readonly RequestDelegate _next;
@@ -25,12 +21,22 @@ namespace Suit2.Extensions
 
         public async Task InvokeAsync(HttpContext context) {
             var path = context.Request.Path.ToUriComponent().ToLowerInvariant();
-            Console.WriteLine(path);
-            if (path.Contains("/redirect")) {
-                context.Request.Path = "/api/index";
+            var thingId = context.Request.Query["thingId"].ToString();
+
+            if (path.Contains("/lockweb")) {
+                var templateController = GetControllerByThingId(thingId);
+
+                context.Request.Path = path.Replace("lockweb", templateController);
             }
 
-            await _next(context);
+            //Let the next middleware (MVC routing) handle the request
+            //In case the path was updated, the MVC routing will see the updated path
+            await _next.Invoke(context);
+        }
+
+        private string GetControllerByThingId(string thingId) {
+            //some logic
+            return "yinhua";
         }
     }
 }

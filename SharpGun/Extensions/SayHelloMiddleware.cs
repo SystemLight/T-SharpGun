@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using SharpGun.Extensions;
+using Microsoft.AspNetCore.Builder;
 
-namespace Microsoft.AspNetCore.Builder
+namespace SharpGun.Extensions
 {
     public static class SayHelloMiddlewareExtensions
     {
@@ -10,10 +10,7 @@ namespace Microsoft.AspNetCore.Builder
             return app.UseMiddleware<SayHelloMiddleware>();
         }
     }
-}
 
-namespace SharpGun.Extensions
-{
     public class SayHelloMiddleware
     {
         private readonly RequestDelegate _next;
