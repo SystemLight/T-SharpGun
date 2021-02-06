@@ -1,6 +1,6 @@
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using SharpGun;
 
 /*
     执行内容：
@@ -36,5 +36,8 @@ Host
         // webBuilder.UseUrls("http://0.0.0.0:8001");
 
         // 将所有配置项通过该泛型类Startup映射
-        webBuilder.UseStartup<Startup>();
-    }).Build().Run();
+        webBuilder.UseStartup<SharpGun.Startup>();
+    })
+    // 使用Autofac第三方依赖注入容器
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .Build().Run();

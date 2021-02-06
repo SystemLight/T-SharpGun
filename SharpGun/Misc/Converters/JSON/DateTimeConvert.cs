@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SharpGun.Converters.JSON
+namespace SharpGun.Misc.Converters.JSON
 {
     public class DateTimeConvert : JsonConverter<DateTime?>
     {

@@ -5,8 +5,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
+        <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0"/>
+        <PackageReference Include="Castle.Core" Version="4.4.1"/>
+        <PackageReference Include="Microsoft.AspNet.WebApi.Versioning" Version="4.1.0"/>
+        <PackageReference Include="Microsoft.AspNet.WebApi.Versioning.ApiExplorer" Version="4.1.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="5.0.0"/>
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.2"/>
     </ItemGroup>
 
 </Project>

@@ -1,14 +1,19 @@
-﻿@page "/Pages/Home"
-@model SharpGun.Pages.Home
+﻿@page
+@model SharpGun.Pages.Pivot.Home
 
 @* TagHelper类的全名，程序集的名称 *@
 @* @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers *@
 @* @addTagHelper *, AuthoringTagHelpers *@
 
+@* 使用自定义拓展标签 *@
+@* @addTagHelper SharpGun.Extensions.Razor.Tags.HelloTagHelper, SharpGun *@
+
 @{
     ViewData["title"] = "Hello HomeFull";
-    Layout = "Layouts/_Frame";
 }
+
+@* 调用自定义组件 *@
+@* @await Component.InvokeAsync("Hello") *@
 
 <h1>@Model.Message</h1>
 <div>

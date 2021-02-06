@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SharpGun.Exceptions;
+using SharpGun.Misc.Exceptions;
 
 namespace SharpGun.Controllers
 {

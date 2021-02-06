@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpGun.Utils
+namespace SharpGun.Misc.Utils
 {
     public static class Tool
     {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SharpGun.Exceptions;
+using SharpGun.Misc.Exceptions;
 
-namespace SharpGun.Filters
+namespace SharpGun.Misc.Filters
 {
-    public class MyExceptionFilter : IExceptionFilter
+    public class MyExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        public void OnException(ExceptionContext context) {
+        public override void OnException(ExceptionContext context) {
             var knownException = context.Exception as IKnowException;
             knownException = knownException == null
                 ? KnowException.Unknown

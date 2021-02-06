@@ -1,8 +1,21 @@
+using System.Linq;
+using Autofac;
+using Autofac.Extras.DynamicProxy;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SharpGun.Misc.Allocations;
+using SharpGun.Misc.Aop;
+using SharpGun.Misc.Policies;
+using SharpGun.Services;
 
 namespace SharpGun
 {
@@ -130,6 +143,31 @@ namespace SharpGun
 
             #endregion
 
+            #region 添加验证服务
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => { options.LoginPath = new PathString("/Home/Login"); });
+
+            #endregion
+
+            #region 添加自定义授权服务
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Policy01",
+                    builder => { builder.AddRequirements(new HelloAuthorizationRequirement("Policy01")); });
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Policy02",
+                    builder => { builder.AddRequirements(new HelloAuthorizationRequirement("Policy02")); });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HelloAuthorizationHandler>();
+
+            #endregion
+
             // 注册日志所需服务
             // services.AddLogging();
 
@@ -140,33 +178,13 @@ namespace SharpGun
             // services.AddHttpContextAccessor();
 
             // 将Controller所需的service添加注册到IOC容器，搭配endpoint.MapControllers()方法
-            services.AddControllers();
+            // services.AddControllers();
 
             // 将Controller所需的service添加注册到IOC容器，并包含Views视图的服务
             // services.AddControllersWithViews();
-            services.AddRazorPages();
-
-            #region 添加Razor引擎服务处理视图，代替AddMvc方法
-
-            /*
-                services.AddRazorPages(options =>
-                {
-                    // 添加友好路由，第一个参数时页面实体文件，可以不加拓展，第二个参数是实际映射路由
-                    options.Conventions.AddPageRoute("/DetailA", "/Pages");
-
-                    // 所有请求映射到一个文件
-                    options.Conventions.AddPageRoute("/index", "{*url}");
-                }).AddViewOptions(options =>
-                {
-                    // 禁用客户端验证
-                    options.HtmlHelperOptions.ClientValidationEnabled = false;
-                });
-            */
-
-            #endregion
 
             // 将MVC所需的service添加注册到IOC容器，搭配endpoint.MapControllerRoute()方法
-            // services.AddMvc();
+            services.AddMvc();
 
             #region MVC生命周期服务高级配置功能
 
@@ -183,8 +201,22 @@ namespace SharpGun
                     });
                 }).AddJsonOptions(options =>
                 {
+                    // 直接使用的方式
+                    // JsonSerializerOptions options = new JsonSerializerOptions()
+                    // {
+                    //     Converters.Add(new DateTimeConverterUsingDateTimeParse())
+                    // };
+                    // string jsonString = JsonSerializer.Serialize(data, options);
+
                     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
                     options.JsonSerializerOptions.Converters.Add(new DateTimeConvert());
+                }).AddNewtonsoftJson(options =>
+                {
+                    // 使用AddNewtonsoftJson，与AddJsonOptions不兼容，两者二选一
+                    // SerializerSettings: https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_JsonSerializerSettings.htm
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc; // 设置时区为 UTC)
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 });
             */
 
@@ -201,9 +233,59 @@ namespace SharpGun
 
             #endregion
 
+            // 添加基础RazorPage引擎服务
+            services.AddRazorPages();
+
+            #region 添加Razor引擎服务处理视图，代替AddMvc方法
+
+            /*
+                services.AddRazorPages(options =>
+                {
+                    // 添加友好路由，第一个参数时页面实体文件，可以不加拓展，第二个参数是实际映射路由
+                    options.Conventions.AddPageRoute("/DetailA", "/Pages");
+
+                    // 所有请求映射到一个文件
+                    options.Conventions.AddPageRoute("/index", "{*url}");
+                }).AddViewOptions(options =>
+                {
+                    // 禁用客户端验证
+                    options.HtmlHelperOptions.ClientValidationEnabled = false;
+                }).AddRazorRuntimeCompilation();
+            */
+
+            #endregion
+
             // 自定义服务添加拓展举例
-            // services.AddElvesRepository(120);
+            services.AddElvesRepository(120);
             // services.AddReadJson("wwwroot/trial.json");
+
+            // 指定控制器实例让Autofac容器来创建
+            services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder) {
+            // 查询程序集中所有公共控制器以支持属性注入
+            builder.RegisterTypes(
+                typeof(Startup).Assembly.GetExportedTypes()
+                    .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
+                    .ToArray()
+            ).PropertiesAutowired(new HelloPropertySelector());
+
+            #region 注册所有IHelloAopService抽象的具体实现，之后可以直接通过具体实现获取
+
+            /*
+                builder.RegisterSource(
+                    new AnyConcreteTypeNotAlreadyRegisteredSource(t => t.IsAssignableTo<IHelloAopService>())
+                );
+            */
+
+            #endregion
+
+            // module方式配置注册
+            // builder.RegisterModule<AutofacModule>();
+
+            builder.RegisterType(typeof(HelloInterceptor));
+            builder.RegisterType<HelloAopService>().As<IHelloAopService>().EnableInterfaceInterceptors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -303,6 +385,9 @@ namespace SharpGun
             // VaryByQueryKeys高级缓存配置
             // app.UseResponseCaching();
 
+            // 启用session功能
+            // app.UseSession();
+
             // 注册http访问重定向到https访问
             // app.UseHttpsRedirection();
 
@@ -347,14 +432,16 @@ namespace SharpGun
             #endregion
 
             // UseStaticFiles和UseDefaultFiles合并的中间件
-            // app.UseFileServer(enableDirectoryBrowsing: false);
+            app.UseFileServer(enableDirectoryBrowsing: false);
 
             // 路由匹配，找到匹配的终结点路由Endpoint
             app.UseRouting();
 
-            // 启用验证功能
-            // app.UseAuthentication();
-            // app.UseAuthorization();
+            // 启用鉴权功能
+            app.UseAuthentication();
+
+            // 启用授权功能
+            app.UseAuthorization();
 
             // 【弃用】使用MVC中间件，使用endpoint中MapControllerRoute()方法代替
             // app.UseMvc();
@@ -391,10 +478,7 @@ namespace SharpGun
                 // endpoints.MapHealthChecks("/healthz").RequireAuthorization();
 
                 // 只映射添加[Route("")]装饰的Controller类
-                endpoints.MapControllers();
-
-                // 映射Pages目录下RazorPages视图文件
-                endpoints.MapRazorPages();
+                // endpoints.MapControllers();
 
                 #region 映射MVC控制器路由，该方法代替了UseMvc()中间件
 
@@ -408,7 +492,7 @@ namespace SharpGun
                 #endregion
 
                 // 【语法糖】等效于上述的default配置
-                // endpoints.MapDefaultControllerRoute();
+                endpoints.MapDefaultControllerRoute();
 
                 #region 映射MVC区域路由，控制器中通过[Area("名称")]装饰区分区域
 
@@ -420,6 +504,9 @@ namespace SharpGun
                 */
 
                 #endregion
+
+                // 映射Pages目录下RazorPages视图文件
+                endpoints.MapRazorPages();
             });
 
             // 注册HTTP状态管理中间件，使用内置Page

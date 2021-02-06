@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 
-namespace SharpGun.Extensions
+namespace SharpGun.Extensions.Middlewares
 {
     public static class ProxyMiddlewareExtensions
     {

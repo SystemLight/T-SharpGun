@@ -2,7 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Rewrite;
 
-namespace SharpGun.Extensions
+namespace SharpGun.Misc.Allocations
 {
     public class RewriteRule : IRule
     {

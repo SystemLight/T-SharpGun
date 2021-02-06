@@ -1,17 +1,26 @@
-﻿# @systemlight/SharpGun
+﻿# SharpGun
 
-CSharp页面模板，包含各种中间件配置注释，需要按需使用
+更加全面的.Net5 Web开发模板
 
 ## 技术栈
 
 #### 核心环境
 
-- [x] dotnet core 5
+- [x] .Net5 (Sdk=Microsoft.NET.Sdk.Web)
 
 #### 依赖包
 
-- [ ] Microsoft.AspNetCore.SpaServices.Extensions
-- [x] Swashbuckle.AspNetCore
+- [X] Microsoft.AspNetCore.SpaServices.Extensions
+- [X] Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+- [X] Microsoft.AspNetCore.Mvc.NewtonsoftJson
+- [X] Microsoft.AspNet.WebApi.Versioning
+- [X] Microsoft.AspNet.WebApi.Versioning.ApiExplorer
+- [X] Microsoft.Extensions.Logging.Log4Net.AspNetCore
+- [X] Autofac.Extensions.DependencyInjection
+- [X] Autofac.Extras.DynamicProxy
+- [X] Castle.Core
+- [X] Swashbuckle.AspNetCore
+- [X] System.Data.SqlClient
 
 ## 注释规范
 
@@ -48,16 +57,32 @@ app.UseRouting();
 |  :----  | :----  |
 | Controllers  | 网络请求捕获控制 |
 | Converts  | 转换映射处理 |
-| Exceptions  | 异常处理 |
 | Extensions  | 拓展原有方法，中间件等 |
-| Filters  | MVC过滤拦截类 |
+| Misc  | 转换器，过滤器，异常处理，规则配置类，实用工具等 |
 | Models  | 数据或业务模型 |
 | Pages  | 独立Razor页面 |
 | Services  | 服务类存放处 |
-| Utils  | 实用工具类 |
 | ViewModels  | 视图模型映射类 |
 | Views  | MVC视图访问文件夹 |
 | wwwroot  | 默认静态文件访问路径 |
 | Program.cs  | 核心程序入口文件 |
-| SharpGun.xml  | 配置文档生成后产生的说明文件 |
 | Startup.cs  | 中间件注入，app启动配置文件 |
+
+## 应用部署
+
+#### Kestrel
+
+```
+dotnet publish
+
+cd bin/Debug/net5.0/publish && <AppName>.exe
+或
+cd bin/Debug/net5.0/publish && dotnent <AppName>.dll --urls="http://*:5000" --ip="127.0.0.1" --port=5000
+```
+
+#### IIS
+
+```
+dotnet publish -c Release
+cd bin/Debug/net5.0/publish
+```

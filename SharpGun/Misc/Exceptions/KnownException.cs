@@ -1,4 +1,4 @@
-﻿namespace SharpGun.Exceptions
+﻿namespace SharpGun.Misc.Exceptions
 {
     public interface IKnowException
     {

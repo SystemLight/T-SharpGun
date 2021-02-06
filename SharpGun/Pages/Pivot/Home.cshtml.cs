@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SharpGun.Pages
+namespace SharpGun.Pages.Pivot
 {
     public class Home : PageModel
     {
