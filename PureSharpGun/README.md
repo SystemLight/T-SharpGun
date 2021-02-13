@@ -17,8 +17,25 @@
 - [ ] Microsoft.AspNet.WebApi.Versioning.ApiExplorer
 - [ ] Microsoft.Extensions.Logging.Log4Net.AspNetCore
 - [ ] Autofac.Extensions.DependencyInjection
-- [x] Swashbuckle.AspNetCore
+- [ ] Swashbuckle.AspNetCore
 - [ ] System.Data.SqlClient
+
+## 目录结构
+
+|  文件名   | 作用  |
+|  :----  | :----  |
+| Controllers  | 网络请求捕获控制 |
+| Converts  | 转换映射处理 |
+| Extensions  | 拓展原有方法，中间件等 |
+| Misc  | 转换器，过滤器，异常处理，规则配置类，实用工具等 |
+| Models  | 数据或业务模型 |
+| Pages  | 独立Razor页面 |
+| Services  | 服务类存放处 |
+| ViewModels  | 视图模型映射类 |
+| Views  | MVC视图访问文件夹 |
+| wwwroot  | 默认静态文件访问路径 |
+| Program.cs  | 核心程序入口文件 |
+| Startup.cs  | 中间件注入，app启动配置文件 |
 
 ## 注释规范
 
@@ -49,22 +66,29 @@
 app.UseRouting();
 ```
 
-## 目录结构
+## 模型生成
 
-|  文件名   | 作用  |
-|  :----  | :----  |
-| Controllers  | 网络请求捕获控制 |
-| Converts  | 转换映射处理 |
-| Extensions  | 拓展原有方法，中间件等 |
-| Misc  | 转换器，过滤器，异常处理，规则配置类，实用工具等 |
-| Models  | 数据或业务模型 |
-| Pages  | 独立Razor页面 |
-| Services  | 服务类存放处 |
-| ViewModels  | 视图模型映射类 |
-| Views  | MVC视图访问文件夹 |
-| wwwroot  | 默认静态文件访问路径 |
-| Program.cs  | 核心程序入口文件 |
-| Startup.cs  | 中间件注入，app启动配置文件 |
+#### 安装工具
+
+```
+dotnet tool install --global dotnet-ef
+```
+
+#### 添加依赖包
+
+```
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.Tools
+Microsoft.EntityFrameworkCore.SqlServer
+```
+
+#### 数据库映射对象
+
+- [更多指令参考](https://docs.microsoft.com/zh-cn/ef/core/cli/dotnet)
+
+```
+dotnet ef dbcontext scaffold "Data Source=[数据库地址];Initial Catalog=[数据库名];User ID=[用户名];Password=[密码]" Microsoft.EntityFrameworkCore.SqlServer -o Entity -f -c MyDbContext --context-dir ./
+```
 
 ## 应用部署
 
