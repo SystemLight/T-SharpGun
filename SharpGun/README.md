@@ -16,7 +16,7 @@
 - [X] Microsoft.AspNet.WebApi.Versioning
 - [X] Microsoft.AspNet.WebApi.Versioning.ApiExplorer
 - [X] Microsoft.EntityFrameworkCore
-- [X] Microsoft.EntityFrameworkCore.Tools
+- [X] Microsoft.EntityFrameworkCore.tools
 - [X] Microsoft.EntityFrameworkCore.SqlServer
 - [X] Microsoft.Extensions.Logging.Log4Net.AspNetCore
 - [X] Autofac.Extensions.DependencyInjection
@@ -79,15 +79,15 @@ app.UseRouting();
 dotnet tool install --global dotnet-ef
 ```
 
-#### 添加依赖包
+#### 添加依赖包(SqlServer)
 
 ```
 Microsoft.EntityFrameworkCore
-Microsoft.EntityFrameworkCore.Tools
+Microsoft.EntityFrameworkCore.tools
 Microsoft.EntityFrameworkCore.SqlServer
 ```
 
-#### 数据库映射对象
+#### 数据库映射对象(SqlServer)
 
 - [更多指令参考](https://docs.microsoft.com/zh-cn/ef/core/cli/dotnet)
 

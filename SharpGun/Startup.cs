@@ -168,6 +168,15 @@ namespace SharpGun
 
             #endregion
 
+            // 添加非分布式IMemoryCache的内存实现
+            // services.AddMemoryCache();
+
+            // 系统账户创建和验证服务
+            // services.AddIdentity<>();
+
+            // 添加ORM上下文处理器
+            // services.AddDbContext<ApplicationDbContext>();
+
             // 注册日志所需服务
             // services.AddLogging();
 
