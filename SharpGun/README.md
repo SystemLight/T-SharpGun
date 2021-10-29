@@ -1,6 +1,6 @@
-﻿# SharpGun
+﻿# PureSharpGun
 
-更加全面的.Net5 Web开发模板
+纯净版的SharpGun .Net5 Web开发模板
 
 ## 技术栈
 
@@ -10,20 +10,15 @@
 
 #### 依赖包
 
-- [X] Microsoft.AspNetCore.SpaServices.Extensions
-- [X] Microsoft.AspNetCore.Mvc.NewtonsoftJson
-- [X] Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
-- [X] Microsoft.AspNet.WebApi.Versioning
-- [X] Microsoft.AspNet.WebApi.Versioning.ApiExplorer
-- [X] Microsoft.EntityFrameworkCore
-- [X] Microsoft.EntityFrameworkCore.tools
-- [X] Microsoft.EntityFrameworkCore.SqlServer
-- [X] Microsoft.Extensions.Logging.Log4Net.AspNetCore
-- [X] Autofac.Extensions.DependencyInjection
-- [X] Autofac.Extras.DynamicProxy
-- [X] Castle.Core
-- [X] Swashbuckle.AspNetCore
-- [X] System.Data.SqlClient
+- [ ] Microsoft.AspNetCore.SpaServices.Extensions
+- [ ] Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+- [ ] Microsoft.AspNetCore.Mvc.NewtonsoftJson
+- [ ] Microsoft.AspNet.WebApi.Versioning
+- [ ] Microsoft.AspNet.WebApi.Versioning.ApiExplorer
+- [ ] Microsoft.Extensions.Logging.Log4Net.AspNetCore
+- [ ] Autofac.Extensions.DependencyInjection
+- [ ] Swashbuckle.AspNetCore
+- [ ] System.Data.SqlClient
 
 ## 目录结构
 
@@ -79,15 +74,15 @@ app.UseRouting();
 dotnet tool install --global dotnet-ef
 ```
 
-#### 添加依赖包(SqlServer)
+#### 添加依赖包
 
 ```
 Microsoft.EntityFrameworkCore
-Microsoft.EntityFrameworkCore.tools
+Microsoft.EntityFrameworkCore.Tools
 Microsoft.EntityFrameworkCore.SqlServer
 ```
 
-#### 数据库映射对象(SqlServer)
+#### 数据库映射对象
 
 - [更多指令参考](https://docs.microsoft.com/zh-cn/ef/core/cli/dotnet)
 
